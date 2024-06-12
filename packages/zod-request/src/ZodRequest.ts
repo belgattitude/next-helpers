@@ -1,10 +1,11 @@
 import type { z } from 'zod';
-import { HttpExceptionHandler, type IErrorHandler } from './error';
+import type { IErrorHandler } from './error';
 import type { ParsableRequest, RequestSchema } from './types';
 import { mapRequestSchemaToZod } from './utils';
+import { ZodRequestError } from './ZodRequestError';
 
 const schemaDefaults = {
-  method: 'GET',
+  method: ['GET', 'HEAD'],
   query: {},
   headers: {},
   cookies: {},
@@ -15,6 +16,11 @@ export class ZodRequest<T extends RequestSchema> {
     public readonly schema: T,
     private errorHandler?: IErrorHandler
   ) {}
+
+  /**
+   *
+   * @throws ZodRequestError in case of validation errors
+   */
   parse = (
     req: ParsableRequest
   ): z.infer<ReturnType<typeof mapRequestSchemaToZod<T>>> => {
@@ -23,10 +29,10 @@ export class ZodRequest<T extends RequestSchema> {
     if (result.success) {
       return result.data;
     }
-    if (!this.errorHandler) {
-      new HttpExceptionHandler().process(result.error);
+    if (this.errorHandler) {
+      throw this.errorHandler.process(result.error);
     }
-    throw result.error;
+    throw new ZodRequestError<typeof this.schema>(result.error);
   };
   static create = <S extends Partial<RequestSchema>>(params: {
     schema: S;

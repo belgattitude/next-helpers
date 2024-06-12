@@ -1,6 +1,6 @@
 import type { IncomingHttpHeaders, IncomingMessage } from 'node:http';
 import type { GetServerSidePropsContext, NextApiRequest } from 'next';
-import type { ZodType, z } from 'zod';
+import type { ZodType, z, ZodIssue } from 'zod';
 import type { httpMethods } from './constants';
 import type {
   mapRequestSchemaToZod,
@@ -17,19 +17,18 @@ export type TupleOfHttpMethods = [HttpMethod, ...HttpMethod[]];
 /**
  * Well-known headers that aren't specifically covered by @types/node IncomingHttpHeaders
  */
-interface AdditionalRequestHeaders {
+type AdditionalRequestHeaders = {
   /**
    * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization
    */
   authorization: string;
-}
+};
 
 /**
  * @see https://developer.mozilla.org/en-US/docs/Glossary/Request_header
  */
-export type IncomingHttpHeadersKeys =
-  | keyof AdditionalRequestHeaders
-  | keyof IncomingHttpHeaders;
+export type IncomingHttpHeadersKeys = keyof (IncomingHttpHeaders &
+  AdditionalRequestHeaders);
 
 /**
  * Schema for validating api routes requests (a.k.a NextApiRequest)
@@ -140,3 +139,5 @@ export type ParsableGsspContext = {
   };
   locale?: GetServerSidePropsContext['locale'];
 };
+
+export type ZodIssueWithoutPath = Omit<ZodIssue, 'path'>;

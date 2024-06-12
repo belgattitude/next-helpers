@@ -1,34 +1,48 @@
-import type { ZodError, ZodIssue } from 'zod';
-import type { RequestSchema } from './types';
+import type { ZodError } from 'zod';
+import type { RequestSchema, ZodIssueWithoutPath } from './types';
 
-export class ZodRequestError<TZodError extends ZodError> {
-  public requestError: {
-    method: ZodIssue[];
-    query: ZodIssue[];
-    headers: ZodIssue[];
-    cookies: ZodIssue[];
+type RequestError<T extends RequestSchema> = {
+  method: ZodIssueWithoutPath;
+  query: {
+    [k in keyof T['query']]: ZodIssueWithoutPath[];
   };
-  constructor(private zodError: TZodError) {
+  headers: {
+    [k in keyof T['headers']]: ZodIssueWithoutPath[];
+  };
+  cookies: {
+    [k in keyof T['cookies']]: ZodIssueWithoutPath[];
+  };
+};
+
+export class ZodRequestError<T extends RequestSchema> extends Error {
+  public requestError: RequestError<T>;
+  constructor(private zodError: ZodError) {
+    super('Request validation error.');
     this.requestError = this.getError();
   }
   getTypes() {
     const { query, cookies, headers, method } = this.requestError;
-    return [method.length > 0 ? 'method' : null].filter((v) => v);
+    return [
+      method ? 'method' : null,
+      Object.keys(query).length > 0 ? 'query' : null,
+      Object.keys(headers).length > 0 ? 'headers' : null,
+      Object.keys(cookies).length > 0 ? 'cookies' : null,
+    ].filter((v) => v);
   }
-  private getError(): Record<keyof RequestSchema, ZodIssue[]> {
-    return {
-      method: [
-        {
-          code: 'invalid_enum_value',
-          message: 'Invalid method',
-          options: ['GET'],
-          received: 'POST',
-          path: ['method'],
-        },
-      ],
-      query: [],
-      headers: [],
-      cookies: [],
-    };
-  }
+  getError = (): RequestError<T> => {
+    const errMap: Record<string, unknown> = {};
+    this.zodError.issues.forEach((err) => {
+      const { path, ...errNoPath } = err;
+      const root = path[0] as string;
+      if (root === 'method') {
+        errMap[root] = errNoPath;
+      } else if (['query', 'headers', 'cookies'].includes(root)) {
+        const param = path[1];
+        errMap[root] ??= {};
+        (errMap[root] as Record<string, unknown[]>)[param] ??= [];
+        (errMap[root] as Record<string, unknown[]>)[param].push(errNoPath);
+      }
+    });
+    return errMap as unknown as RequestError<T>;
+  };
 }

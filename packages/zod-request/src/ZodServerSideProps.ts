@@ -1,5 +1,5 @@
 import type { z } from 'zod';
-import { HttpExceptionHandler, type IErrorHandler } from './error';
+import type { IErrorHandler } from './error';
 import type { ServerSidePropsSchema, ParsableGsspContext } from './types';
 import { mapServerSidePropsSchemaToZod } from './utils';
 
@@ -15,9 +15,12 @@ export class ZodServerSideProps<T extends ServerSidePropsSchema> {
     public readonly schema: T,
     private errorHandler?: IErrorHandler
   ) {}
+
   parse = (
-    context: ParsableGsspContext
+    context: ParsableGsspContext,
+    errorHandler?: IErrorHandler
   ): z.infer<ReturnType<typeof mapServerSidePropsSchemaToZod<T>>> => {
+    const errHandler = errorHandler ?? this.errorHandler;
     const all = mapServerSidePropsSchemaToZod<T>(this.schema);
     const result = all.safeParse({
       method: context.req.method,
@@ -28,8 +31,8 @@ export class ZodServerSideProps<T extends ServerSidePropsSchema> {
     if (result.success) {
       return result.data;
     }
-    if (!this.errorHandler) {
-      new HttpExceptionHandler().process(result.error);
+    if (errHandler) {
+      errHandler.process(result.error);
     }
     throw result.error;
   };

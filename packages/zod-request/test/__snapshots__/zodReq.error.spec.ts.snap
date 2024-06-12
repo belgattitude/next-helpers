@@ -1,0 +1,60 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`zodReq error tests > when query params are invalid > should throw HttpBadRequest 1`] = `
+{
+  "cookies": {
+    "userLocale": [
+      {
+        "code": "invalid_enum_value",
+        "message": "Invalid enum value. Expected 'fr' | 'en', received 'unsupported'",
+        "options": [
+          "fr",
+          "en",
+        ],
+        "received": "unsupported",
+      },
+    ],
+  },
+  "headers": {
+    "authorization": [
+      {
+        "code": "invalid_string",
+        "message": "Invalid",
+        "validation": "regex",
+      },
+    ],
+  },
+  "method": {
+    "code": "invalid_enum_value",
+    "message": "Invalid enum value. Expected 'GET', received 'POST'",
+    "options": [
+      "GET",
+    ],
+    "received": "POST",
+  },
+  "query": {
+    "email": [
+      {
+        "code": "invalid_string",
+        "message": "Invalid email",
+        "validation": "email",
+      },
+    ],
+    "name": [
+      {
+        "code": "too_small",
+        "exact": false,
+        "inclusive": true,
+        "message": "String must contain at least 8 character(s)",
+        "minimum": 8,
+        "type": "string",
+      },
+      {
+        "code": "invalid_string",
+        "message": "Invalid",
+        "validation": "regex",
+      },
+    ],
+  },
+}
+`;

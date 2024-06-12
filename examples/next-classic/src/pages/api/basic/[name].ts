@@ -2,8 +2,8 @@ import { zodReq } from '@nextvalid/zod-request';
 
 import type { NextApiHandler } from 'next';
 import { z } from 'zod';
-import { withApiErrorHandler } from '@/backend';
 import { ConsoleLogger } from '@/lib';
+import { withApiErrorHandler } from '@/server';
 
 const schema = zodReq({
   method: 'GET',

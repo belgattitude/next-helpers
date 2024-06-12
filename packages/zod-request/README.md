@@ -1,5 +1,8 @@
 # @nextvalid/zod-request
 
+Convenient request validation for nextjs api routes, getServerSideProps and
+getStaticProps.
+
 [![npm](https://img.shields.io/npm/v/@nextvalid/zod-request?style=for-the-badge&labelColor=222)](https://www.npmjs.com/package/@nextvalid/zod-request)
 [![size](https://img.shields.io/bundlephobia/minzip/@nextvalid/zod-request@latest?label=MinGZIP&style=for-the-badge&labelColor=333&color=informational)](https://bundlephobia.com/package/@nextvalid/zod-request@latest)
 [![node](https://img.shields.io/static/v1?label=Node&message=14%2b&logo=node.js&style=for-the-badge&labelColor=444&color=informational)](https://browserslist.dev/?q=PjAuMjUlLCBub3QgZGVhZA%3D%3D)
@@ -10,17 +13,11 @@
 [![maintainability](https://img.shields.io/codeclimate/maintainability/belgattitude/nextvalid?label=Maintainability&logo=code-climate&style=for-the-badge&labelColor=444)](https://codeclimate.com/github/belgattitude/nextvalid)
 [![license](https://img.shields.io/npm/l/@nextvalid/zod-request?style=for-the-badge&labelColor=000000)](https://github.com/belgattitude/nextvalid/blob/main/LICENSE)
 
-## Highlights
-
-- 🚀&nbsp; Dead simple
-
 ## Documentation
 
-## Install
-
 ```bash
-npm install @nextvalid/zod-request --save  # via npm
-yarn add @nextvalid/zod-request            # via yarn
+npm install @nextvalid/zod-request
+yarn add @nextvalid/zod-request
 ```
 
 ## Quick start
@@ -34,7 +31,7 @@ import type { NextApiHandler } from "next";
 import { zodReq } from "@nextvalid/zod-request";
 import { z } from "zod";
 
-const schema = zodReq({
+const zr = zodReq({
   method: "GET",
   query: {
     email: z.string().email("Invalid email").optional(),
@@ -45,7 +42,7 @@ const schema = zodReq({
 });
 
 const getHandler: NextApiHandler = async (req, res) => {
-  const { query, headers } = schema.parse(req);
+  const { query, headers } = zr.parse(req);
 
   const { email } = query; // email is typed to `string | undefined`
   res.json({

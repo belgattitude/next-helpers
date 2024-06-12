@@ -3,6 +3,7 @@ import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { z } from 'zod';
 
 const schema = zodGssp({
+  method: 'GET',
   query: {
     name: z.string().min(3).max(80).optional(),
     email: z.string().email('Invalid email').optional(),
@@ -41,7 +42,6 @@ export default function ssrRoute(
 
 export const getServerSideProps: GetServerSideProps<Props> = async (
   context
-  // eslint-disable-next-line @typescript-eslint/require-await
 ) => {
   const data = schema.parse(context);
   return {
