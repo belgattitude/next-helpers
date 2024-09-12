@@ -1407,7 +1407,7 @@ __metadata:
     cross-env: "npm:7.0.3"
     es-check: "npm:7.1.1"
     eslint: "npm:8.49.0"
-    get-tsconfig: "npm:4.7.0"
+    get-tsconfig: "npm:4.8.1"
     next: "npm:13.5.2"
     npm-run-all: "npm:4.1.5"
     prettier: "npm:3.0.3"
@@ -5672,12 +5672,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"get-tsconfig@npm:4.7.0, get-tsconfig@npm:^4.5.0":
-  version: 4.7.0
-  resolution: "get-tsconfig@npm:4.7.0"
+"get-tsconfig@npm:4.8.1, get-tsconfig@npm:^4.5.0":
+  version: 4.8.1
+  resolution: "get-tsconfig@npm:4.8.1"
   dependencies:
     resolve-pkg-maps: "npm:^1.0.0"
-  checksum: 10c0/5844d18a705535808cf535010d9443b47b462c6e91ed00d94500602f220ecb8e518325d5b1f9e0c515c67025819c3df193194144a456e1d8f1cd70b5d48b52aa
+  checksum: 10c0/536ee85d202f604f4b5fb6be81bcd6e6d9a96846811e83e9acc6de4a04fb49506edea0e1b8cf1d5ee7af33e469916ec2809d4c5445ab8ae015a7a51fbd1572f9
   languageName: node
   linkType: hard
 
