@@ -87,7 +87,7 @@
     "@size-limit/file": "9.0.0",
     "@size-limit/webpack": "9.0.0",
     "@size-limit/webpack-why": "9.0.0",
-    "@types/jest": "29.5.5",
+    "@types/jest": "29.5.14",
     "@types/node": "20.9.5",
     "@vitest/coverage-istanbul": "0.34.3",
     "cross-env": "7.0.3",
